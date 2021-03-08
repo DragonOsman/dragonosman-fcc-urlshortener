@@ -49,63 +49,37 @@ app.post("/api/shorturl/new", (req, res) => {
     if (err) {
       console.log(err);
     }
-    console.log(urls);
     shortUrl = urls.length;
-  });
-  const url = new Url({
-    original_url: originalUrl,
-    short_url: shortUrl
-  });
 
-  dns.lookup(domain, (err) => {
-    if (err) {
-      res.json({ error: "invalid url" });
-    }
-
-    const saveUrlInDatabase = (urlDoc, done) => {
-      urlDoc.save((err, url) => {
-        if (err) {
-          return done(err);
-        }
-        console.log(`url ${url} saved to database`);
-        return done(null, url);
-      });
-    };
-
-    saveUrlInDatabase(url, (err, data) => {
-      if (err) {
-        console.log(err);
-      }
-      if (!data) {
-        console.log("Missing done() argument");
-      }
-    });
-
-    res.json({
+    const url = new Url({
       original_url: originalUrl,
       short_url: shortUrl
+    });
+
+    dns.lookup(domain, (err) => {
+      if (err) {
+        res.json({ error: "invalid url" });
+      }
+
+      url.save((err, url) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+
+      res.json({
+        original_url: originalUrl,
+        short_url: shortUrl
+      });
     });
   });
 });
 
 app.get("/api/shorturl/:short_url", (req, res) => {
-  let doc;
-  const retrieveOriginalUrl = (url, done) => {
-    doc = Url.findOne({ short_url: req.params.short_url }, (err, url) => {
-      if (err) {
-        done(err);
-      }
-      done(null, url);
-    });
-  };
-
-  retrieveOriginalUrl(req.params.short_url, (err, data) => {
+  Url.findOne({ short_url: req.params.short_url }, (err, url) => {
     if (err) {
       console.log(err);
     }
-    if (!data) {
-      console.log("Missing done() argument");
-    }
+    res.redirect(url.original_url);
   });
-  console.log(doc);
 });
