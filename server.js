@@ -57,6 +57,10 @@ app.post("/api/shorturl/new", (req, res) => {
 
     dns.lookup(domain, (err) => {
       if (err) {
+        res.json({ error: err });
+      }
+
+      if (URL(originalUrl).protocol !== "http" || URL(originalUrl).protocol !== "https") {
         res.json({ error: "invalid url" });
       }
 
