@@ -44,12 +44,11 @@ app.use(bodyParser.json());
 app.post("/api/shorturl/new", (req, res) => {
   const originalUrl = req.body.url;
   const domain = new URL(originalUrl).hostname;
-  let shortUrl;
   Url.find({}, "original_url", (err, urls) => {
     if (err) {
       console.log(err);
     }
-    shortUrl = urls.length;
+    const shortUrl = urls.length;
 
     const url = new Url({
       original_url: originalUrl,
