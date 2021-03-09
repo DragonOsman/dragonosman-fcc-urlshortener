@@ -11,7 +11,7 @@ mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology
 
 const Schema = mongoose.Schema;
 const urlSchema = new Schema({
-  original_url: String,
+  original_url: { type: String, unique: true },
   short_url: String
 });
 
