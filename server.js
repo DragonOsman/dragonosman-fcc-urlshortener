@@ -61,7 +61,7 @@ app.post("/api/shorturl/new", (req, res) => {
         res.json({ error: err });
       }
 
-      if (!originalUrl.substr(0, 5).match("https") || !originalUrl.substr(0, 4).match("http")) {
+      if (!originalUrl.match(/^(http|https):\/\//)) {
         res.json({ error: "invalid url" });
       }
 
