@@ -43,7 +43,8 @@ app.use(bodyParser.json());
 
 app.post("/api/shorturl/new", (req, res) => {
   const originalUrl = req.body.url;
-  const domain = new URL(originalUrl).hostname;
+  const parsedUrl = new URL(originalUrl);
+  const domain = parsedUrl.hostname;
   Url.find({}, (err, urls) => {
     if (err) {
       console.log(err);
@@ -60,7 +61,7 @@ app.post("/api/shorturl/new", (req, res) => {
         res.json({ error: err });
       }
 
-      if (URL(originalUrl).protocol !== "http" || URL(originalUrl).protocol !== "https") {
+      if (!originalUrl.substr(0, 5).match("https") || !originalUrl.substr(0, 4).match("http")) {
         res.json({ error: "invalid url" });
       }
 
