@@ -44,7 +44,7 @@ app.use(bodyParser.json());
 app.post("/api/shorturl/new", (req, res) => {
   const originalUrl = req.body.url;
   const domain = new URL(originalUrl).hostname;
-  Url.find({}, "original_url", (err, urls) => {
+  Url.find({}, (err, urls) => {
     if (err) {
       console.log(err);
     }
