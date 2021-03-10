@@ -65,9 +65,17 @@ app.post("/api/shorturl/new", (req, res) => {
         res.json({ error: "invalid url" });
       }
 
-      url.save((err, url) => {
+      Url.findOne({ original_url: originalUrl }, (err, foundUrl) => {
         if (err) {
           console.log(err);
+        }
+
+        if (!foundUrl) {
+          url.save((err, url) => {
+            if (err) {
+              console.log(err);
+            }
+          });
         }
       });
 
